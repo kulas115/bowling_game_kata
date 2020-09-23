@@ -1,0 +1,49 @@
+class Bowling
+  def initialize
+    @rolls = []
+  end
+
+  def roll(pins)
+    rolls << pins
+  end
+
+  # rubocop:disable Metrics/MethodLength
+  def score
+    result = 0
+    roll_index = 0
+    10.times do
+      if strike?(roll_index)
+        result += strike_or_space_score(roll_index)
+        roll_index += 1
+      elsif spare?(roll_index)
+        result += strike_or_space_score(roll_index)
+        roll_index += 2
+      else
+        result += frame_score(roll_index)
+        roll_index += 2
+      end
+    end
+    result
+  end
+  # rubocop:enable all
+
+  private
+
+  attr_reader :rolls
+
+  def strike?(roll_index)
+    rolls[roll_index] == 10
+  end
+
+  def strike_or_space_score(roll_index)
+    rolls[roll_index] + rolls[roll_index + 1] + rolls[roll_index + 2]
+  end
+
+  def spare?(roll_index)
+    rolls[roll_index] + rolls[roll_index + 1] == 10
+  end
+
+  def frame_score(roll_index)
+    rolls[roll_index] + rolls[roll_index + 1]
+  end
+end
